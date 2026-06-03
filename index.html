@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Game Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0b0b0b;
+    color:white;
+}
+
+header{
+    text-align:center;
+    padding:30px;
+    background:linear-gradient(90deg,#111,#222);
+}
+
+h1{
+    color:#FFD700;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#181818;
+    border:1px solid rgba(255,215,0,.25);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 0 15px rgba(255,215,0,.15);
+}
+
+.game{
+    font-size:22px;
+    font-weight:bold;
+    color:#FFD700;
+}
+
+.value{
+    font-size:28px;
+    margin:10px 0;
+}
+
+.win{
+    color:#00ff99;
+}
+
+.bonus{
+    color:#ffcc00;
+}
+
+.timer{
+    color:#66ccff;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎮 Game Dashboard</h1>
+<p>ข้อมูลสุ่มเพื่อการสาธิต UI</p>
+</header>
+
+<div class="container" id="games"></div>
+
+<script>
+
+const gameNames = [
+    "Dragon Legend",
+    "Lucky Panda",
+    "Treasure Hunt",
+    "Wild Tiger",
+    "Golden Empire",
+    "Phoenix Rise",
+    "Fortune Gems",
+    "Magic Forest"
+];
+
+function randomBonus(){
+    return Math.floor(
+        Math.random() * (1999999 - 100000 + 1)
+    ) + 100000;
+}
+
+function randomPercent(){
+    return Math.floor(
+        Math.random() * 41
+    ) + 60;
+}
+
+function randomCountdown(){
+    return Math.floor(
+        Math.random() * 300
+    ) + 60;
+}
+
+const container =
+document.getElementById("games");
+
+const data = gameNames.map(name=>({
+    name,
+    winRate: randomPercent(),
+    bonus: randomBonus(),
+    countdown: randomCountdown()
+}));
+
+function render(){
+
+    container.innerHTML = "";
+
+    data.forEach(game=>{
+
+        container.innerHTML += `
+        <div class="card">
+            <div class="game">${game.name}</div>
+
+            <div class="value win">
+                อัตราชนะ: ${game.winRate}%
+            </div>
+
+            <div class="value bonus">
+                โบนัสสูงสุด:
+                ${game.bonus.toLocaleString()}
+            </div>
+
+            <div class="value timer">
+                เวลารีเฟรช:
+                ${game.countdown}s
+            </div>
+        </div>
+        `;
+    });
+}
+
+setInterval(()=>{
+
+    data.forEach(game=>{
+
+        game.countdown--;
+
+        if(game.countdown <= 0){
+
+            game.winRate = randomPercent();
+            game.bonus = randomBonus();
+            game.countdown = randomCountdown();
+
+        }
+
+    });
+
+    render();
+
+},1000);
+
+render();
+
+</script>
+
+</body>
+</html>
